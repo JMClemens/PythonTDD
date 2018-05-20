@@ -16,18 +16,31 @@ class NewVisitorTest(unittest.TestCase):
 
 		# She notices the page title and header mention to-do lists
 		self.assertIn('To-Do', self.browser.title)
-		self.fail('Finish the test!')
-
 
 		# She is invited to eneter a to-do item straight away
+		inputbox = self.browser.find_element_by_id('id_new_item')
+		self.assertEqual(
+			inputbox.get_attribute('placeholder'),
+			'Enter a to-do item'
+		)
 
 		# She enters 'Get groceries' into a text box
+		inputbox.send_keys('Get groceries')
 
 		# When she hits enter, the page updates and now lists:
 		# "1:Get groceries" as an item in a to-do list
+		inputbox.send_keys(Keys.ENTER)
+		time.sleep(1)
+
+		table = self.browser.find_element_by_id('id_list_table')
+		rows = table.find_element_by_tag_name('tr')
+		self.assertTrue(
+			any(row.text == '1:Get groceries' for row in rows)
+		)
 
 		# There is still a text box inviting her to add another item
 		# She enters "Pay gas bill"
+		self.fail('Finish the test!')
 
 		# The page updates again, and now has both items on her list
 
